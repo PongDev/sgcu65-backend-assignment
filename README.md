@@ -1,4 +1,4 @@
-[Insert Your Name Here]
+Pongwiwat Limpasuthum
 
 # SGCU65 Backend Recruitment
 
@@ -181,3 +181,19 @@ Team
 - [RDBMS](https://devjourneys.com/2020/04/15/ฐานข้อมูลเบื้องต้น/)
 - [SQL & NoSQL](https://medium.com/@todspolwonhchomphu/sql-คืออะไร-และ-nosql-คืออะไร-561c750dbe4d)
 - [SQL vs NoSQL](https://phuri.medium.com/nosql-คืออะไร-ต่างจาก-rdbms-หรือ-sql-database-อย่างไร-dd8ac91a4197)
+
+## How To Run
+
+**Project นี้ ถูกสร้างขึ้นโดยใช้ NestJS Framework**
+
+Requirement
+- nodejs
+- yarn
+
+วิธีการรัน คือ
+
+1) ```git clone https://github.com/PongDev/sgcu65-backend-assignment.git```
+
+2) สั่ง ```yarn``` เพื่อ install dependencies
+
+3) สั่ง ```yarn start``` เพื่อ run project ขึ้นมา
