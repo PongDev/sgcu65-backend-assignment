@@ -9,3 +9,47 @@ datasource db {
   provider = "postgresql"
   url      = env("PRISMA_DATABASE_URL")
 }
+
+enum Role {
+  ADMIN
+  USER
+}
+
+model User {
+  email        String         @id
+  firstname    String
+  surname      String
+  password     String // Bcrypt Hashed Password
+  role         Role           @default(USER)
+  UsersOnTeams UsersOnTeams[]
+}
+
+model TaskStatus {
+  id   Int    @id @default(autoincrement())
+  name String @unique
+  Task Task[]
+}
+
+model Task {
+  id           Int         @id @default(autoincrement())
+  name         String      @unique
+  content      String
+  status       TaskStatus? @relation(fields: [taskStatusId], references: [id], onUpdate: Cascade, onDelete: SetNull)
+  deadline     DateTime
+  taskStatusId Int?
+}
+
+model Team {
+  id           Int            @id @default(autoincrement())
+  name         String         @unique
+  UsersOnTeams UsersOnTeams[]
+}
+
+model UsersOnTeams {
+  User      User   @relation(fields: [userEmail], references: [email], onUpdate: Cascade, onDelete: Cascade)
+  userEmail String
+  Team      Team   @relation(fields: [teamId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  teamId    Int
+
+  @@id([userEmail, teamId])
+}
