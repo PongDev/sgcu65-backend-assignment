@@ -8,4 +8,7 @@ export default () => ({
     enable: process.env.ENABLE_SWAGGER_API.toLowerCase().trim() === 'true',
     prefix: process.env.SWAGGER_PREFIX_PATH,
   },
+  bcrypt: {
+    cost: parseInt(process.env.BCRYPT_COST, 10) || 10,
+  },
 });

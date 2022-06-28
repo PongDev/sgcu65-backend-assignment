@@ -2,6 +2,7 @@ import { Body, Controller, Post } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
   ApiCreatedResponse,
+  ApiOperation,
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
@@ -27,6 +28,7 @@ export class AuthController {
     description: 'Wrong Email or Password',
     type: ErrorMessage,
   })
+  @ApiOperation({ description: 'Auth for get Bearer Token' })
   async login(@Body() credential: AuthCredential): Promise<JWTAccessToken> {
     return await this.authService.login(credential.email, credential.password);
   }
