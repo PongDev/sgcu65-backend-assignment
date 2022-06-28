@@ -1,8 +1,8 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { JWTAccessToken } from 'src/types/jwt';
 import * as bcrypt from 'bcrypt';
+import { JWTAccessToken } from 'src/dto/auth.dto';
 
 @Injectable()
 export class AuthService {
@@ -12,6 +12,12 @@ export class AuthService {
   ) {}
 
   async login(email: string, password: string): Promise<JWTAccessToken> {
+    if (!email || !password)
+      throw new HttpException(
+        'Email and Password is Required',
+        HttpStatus.BAD_REQUEST,
+      );
+
     const user = await this.prismaService.user.findUnique({
       where: { email },
     });
