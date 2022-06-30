@@ -15,41 +15,53 @@ enum Role {
   USER
 }
 
-model User {
-  email        String         @id
-  firstname    String
-  surname      String
-  password     String // Bcrypt Hashed Password
-  role         Role           @default(USER)
-  UsersOnTeams UsersOnTeams[]
+enum TaskStatus {
+  TODO
+  IN_PROGRESS
+  DONE
 }
 
-model TaskStatus {
-  id   Int    @id @default(autoincrement())
-  name String @unique
-  Task Task[]
+model User {
+  email     String         @id
+  firstname String
+  surname   String
+  password  String // Bcrypt Hashed Password
+  role      Role           @default(USER)
+  teams     UsersOnTeams[]
 }
 
 model Task {
-  id           Int         @id @default(autoincrement())
-  name         String      @unique
-  content      String
-  status       TaskStatus? @relation(fields: [taskStatusId], references: [id], onUpdate: Cascade, onDelete: SetNull)
-  deadline     DateTime
-  taskStatusId Int?
+  id       Int            @id @default(autoincrement())
+  name     String         @unique
+  content  String
+  status   TaskStatus     @default(TODO)
+  deadline DateTime
+  teams    TasksOnTeams[]
 }
 
 model Team {
-  id           Int            @id @default(autoincrement())
-  name         String         @unique
-  UsersOnTeams UsersOnTeams[]
+  id    Int            @id @default(autoincrement())
+  name  String         @unique
+  users UsersOnTeams[]
+  tasks TasksOnTeams[]
 }
 
 model UsersOnTeams {
-  User      User   @relation(fields: [userEmail], references: [email], onUpdate: Cascade, onDelete: Cascade)
+  User      User     @relation(fields: [userEmail], references: [email], onUpdate: Cascade, onDelete: Cascade)
   userEmail String
-  Team      Team   @relation(fields: [teamId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  Team      Team     @relation(fields: [teamId], references: [id], onUpdate: Cascade, onDelete: Cascade)
   teamId    Int
+  assignAt  DateTime @default(now())
 
   @@id([userEmail, teamId])
+}
+
+model TasksOnTeams {
+  Task     Task     @relation(fields: [taskId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  taskId   Int
+  Team     Team     @relation(fields: [teamId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  teamId   Int
+  assignAt DateTime @default(now())
+
+  @@id([taskId, teamId])
 }

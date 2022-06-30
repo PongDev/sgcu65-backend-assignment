@@ -196,6 +196,14 @@ Requirement
 
 2) สั่ง ```yarn``` เพื่อ install dependencies
 
-3) สั่ง ```yarn start``` เพื่อ run project ขึ้นมา
+3) copy .env.template แล้วเปลี่ยนชื่อเป็น .env ทำการ config ค่าใน .env ให้ถูกต้อง
+
+4) run database โดยสามารถ run ผ่าน ```docker-compose up```
+
+5) สั่ง ```yarn database:init``` เพื่อ initialize database
+
+6) สั่ง ```yarn start``` เพื่อ run project ขึ้นมา
+
+7) Swagger API Document จะอยู่บน Path host:port/api (Default คือ localhost:3000/api)
 
 ```# Additional Idea: ใช้ระบบเพิ่ม Role และแต่ละ Role มี Permission กำกับไว้ว่าทำอะไรได้บ้าง เพื่อเพิ่มความยืดหยุ่นของระบบ```
