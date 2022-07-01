@@ -219,19 +219,18 @@ export class TaskService {
     throw new HttpException('Permission Denied', HttpStatus.UNAUTHORIZED);
   }
 
-  async deleteTask(loginUserJWT: JWTData, targetTask: number): Promise<void> {
+  async deleteTask(loginUserJWT: JWTData, targetTask: number): Promise<Task> {
     const loginUser = await this.prismaService.user.findUnique({
       where: { email: loginUserJWT.email },
     });
 
     if (loginUser.role === Role.ADMIN) {
       try {
-        await this.prismaService.task.delete({
+        return await this.prismaService.task.delete({
           where: {
             id: targetTask,
           },
         });
-        return;
       } catch {
         throw new HttpException('Target Task Not Found', HttpStatus.NOT_FOUND);
       }

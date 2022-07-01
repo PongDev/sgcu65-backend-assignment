@@ -4,7 +4,7 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import { JWTData } from 'src/types/jwt';
 import * as bcrypt from 'bcrypt';
 import { ConfigService } from '@nestjs/config';
-import { CreateUserData, GetUserData, UpdateUserData } from 'src/dto/user.dto';
+import { UserData, GetUserData, UpdateUserData } from 'src/dto/user.dto';
 
 @Injectable()
 export class UserService {
@@ -15,7 +15,7 @@ export class UserService {
 
   async createUser(
     loginUserJWT: JWTData,
-    createUserData: CreateUserData,
+    createUserData: UserData,
   ): Promise<GetUserData> {
     const loginUser = await this.prismaService.user.findUnique({
       where: { email: loginUserJWT.email },
@@ -110,17 +110,16 @@ export class UserService {
   async deleteUser(
     loginUserJWT: JWTData,
     deleteUserEmail: string,
-  ): Promise<void> {
+  ): Promise<UserData> {
     const loginUser = await this.prismaService.user.findUnique({
       where: { email: loginUserJWT.email },
     });
 
     if (loginUser.role === Role.ADMIN) {
       try {
-        await this.prismaService.user.delete({
+        return await this.prismaService.user.delete({
           where: { email: deleteUserEmail },
         });
-        return;
       } catch {
         throw new HttpException('User Data Not Found', HttpStatus.NOT_FOUND);
       }

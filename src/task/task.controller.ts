@@ -134,8 +134,7 @@ export class TaskController {
     type: ErrorMessage,
   })
   @ApiParam({ name: 'id', description: "Target Task's ID" })
-  async deleteTask(@Request() req, @Param() params): Promise<void> {
-    await this.taskService.deleteTask(req.user, params.id);
-    return;
+  async deleteTask(@Request() req, @Param() params): Promise<Task> {
+    return await this.taskService.deleteTask(req.user, params.id);
   }
 }

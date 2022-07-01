@@ -18,7 +18,7 @@ export class GetUserData {
   role: Role;
 }
 
-export class CreateUserData extends GetUserData {
+export class UserData extends GetUserData {
   @ApiProperty({ example: 'password' })
   password: string;
 }

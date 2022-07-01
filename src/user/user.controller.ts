@@ -24,7 +24,7 @@ import {
 } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { ErrorMessage } from 'src/dto/error.dto';
-import { CreateUserData, GetUserData, UpdateUserData } from 'src/dto/user.dto';
+import { UserData, GetUserData, UpdateUserData } from 'src/dto/user.dto';
 import { UserService } from './user.service';
 
 @ApiTags('User')
@@ -45,12 +45,12 @@ export class UserController {
   })
   @ApiCreatedResponse({
     description: 'User Created',
-    type: CreateUserData,
+    type: UserData,
   })
   @ApiOperation({ description: 'Create User for Admin' })
   async createUser(
     @Request() req,
-    @Body() createUserData: CreateUserData,
+    @Body() createUserData: UserData,
   ): Promise<GetUserData> {
     return await this.userService.createUser(req.user, createUserData);
   }
@@ -87,9 +87,8 @@ export class UserController {
   @ApiOperation({
     description: 'Delete User by Admin',
   })
-  async deleteUser(@Request() req, @Param() params): Promise<void> {
-    await this.userService.deleteUser(req.user, params.email);
-    return;
+  async deleteUser(@Request() req, @Param() params): Promise<UserData> {
+    return await this.userService.deleteUser(req.user, params.email);
   }
 
   @Get('search')

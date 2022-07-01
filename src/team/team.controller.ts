@@ -135,8 +135,7 @@ export class TeamController {
     type: ErrorMessage,
   })
   @ApiParam({ name: 'id', description: "Target Team's ID" })
-  async deleteTeam(@Request() req, @Param() params): Promise<void> {
-    await this.teamService.deleteTeam(req.user, params.id);
-    return;
+  async deleteTeam(@Request() req, @Param() params): Promise<Team> {
+    return await this.teamService.deleteTeam(req.user, params.id);
   }
 }

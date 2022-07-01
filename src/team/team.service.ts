@@ -191,19 +191,18 @@ export class TeamService {
     throw new HttpException('Permission Denied', HttpStatus.UNAUTHORIZED);
   }
 
-  async deleteTeam(loginUserJWT: JWTData, targetTeam: number): Promise<void> {
+  async deleteTeam(loginUserJWT: JWTData, targetTeam: number): Promise<Team> {
     const loginUser = await this.prismaService.user.findUnique({
       where: { email: loginUserJWT.email },
     });
 
     if (loginUser.role === Role.ADMIN) {
       try {
-        await this.prismaService.team.delete({
+        return await this.prismaService.team.delete({
           where: {
             id: targetTeam,
           },
         });
-        return;
       } catch {
         throw new HttpException('Target Team Not Found', HttpStatus.NOT_FOUND);
       }
