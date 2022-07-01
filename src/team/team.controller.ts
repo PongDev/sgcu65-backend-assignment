@@ -116,8 +116,8 @@ export class TeamController {
     description: 'Team Name Already Exists',
     type: ErrorMessage,
   })
-  @ApiParam({ name: 'id', description: "Target Team's ID" })
   @ApiParam({ name: 'new_name', description: "New Target Team's Name" })
+  @ApiParam({ name: 'id', description: "Target Team's ID" })
   async editTeam(@Request() req, @Param() params): Promise<Team> {
     return await this.teamService.editTeam(
       req.user,
