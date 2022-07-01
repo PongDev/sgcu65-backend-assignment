@@ -26,6 +26,7 @@ import {
   AddOrRemoveTeamUsers,
   Team,
   TeamWithUsersEmail,
+  TeamWithUsersEmailAndTasks,
 } from 'src/dto/team.dto';
 import { TeamService } from './team.service';
 
@@ -80,34 +81,6 @@ export class TeamController {
     );
   }
 
-  @Get(':id')
-  @ApiOkResponse({
-    description: 'Get Team Data',
-  })
-  @ApiParam({ name: 'id', description: "Target Team's ID" })
-  @ApiOperation({
-    description:
-      'Get Team By ID (Admin always found team if exists, User only found team that they participate)',
-  })
-  async getTeamByID(
-    @Request() req,
-    @Param() params,
-  ): Promise<TeamWithUsersEmail> {
-    return await this.teamService.getTeamByID(req.user, parseInt(params.id));
-  }
-
-  @Get()
-  @ApiOkResponse({
-    description: 'Get All Teams Data',
-  })
-  @ApiOperation({
-    description:
-      'Get Team By ID (Admin always found all exists teams, User only found all teams that they participate)',
-  })
-  async getAllTeam(@Request() req) {
-    return this.teamService.getAllTeam(req.user);
-  }
-
   @Put(':id/:new_name')
   @ApiOkResponse({
     description: 'Update Teams Name',
@@ -122,8 +95,36 @@ export class TeamController {
     return await this.teamService.editTeam(
       req.user,
       parseInt(params.id),
-      params.team_name,
+      params.new_name,
     );
+  }
+
+  @Get(':id')
+  @ApiOkResponse({
+    description: 'Get Team Data',
+  })
+  @ApiParam({ name: 'id', description: "Target Team's ID" })
+  @ApiOperation({
+    description:
+      'Get Team By ID (Admin always found team if exists, User only found team that they participate)',
+  })
+  async getTeamByID(
+    @Request() req,
+    @Param() params,
+  ): Promise<TeamWithUsersEmailAndTasks> {
+    return await this.teamService.getTeamByID(req.user, parseInt(params.id));
+  }
+
+  @Get()
+  @ApiOkResponse({
+    description: 'Get All Teams Data',
+  })
+  @ApiOperation({
+    description:
+      'Get Team By ID (Admin always found all exists teams, User only found all teams that they participate)',
+  })
+  async getAllTeam(@Request() req): Promise<TeamWithUsersEmailAndTasks[]> {
+    return this.teamService.getAllTeam(req.user);
   }
 
   @Delete(':id')

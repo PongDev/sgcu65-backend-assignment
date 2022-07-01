@@ -8,6 +8,11 @@ export class Team {
   name: string;
 }
 
+export class TeamWithTasks extends Team {
+  @ApiProperty({ example: [1, 2, 3] })
+  tasksID: number[];
+}
+
 export class TeamWithUsersEmail extends Team {
   @ApiProperty({
     example: [
@@ -17,6 +22,11 @@ export class TeamWithUsersEmail extends Team {
     ],
   })
   usersEmail: string[];
+}
+
+export class TeamWithUsersEmailAndTasks extends TeamWithUsersEmail {
+  @ApiProperty({ example: [1, 2, 3] })
+  tasksID: number[];
 }
 
 export class AddOrRemoveTeamUsers {

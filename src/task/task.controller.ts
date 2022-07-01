@@ -87,6 +87,10 @@ export class TaskController {
   @ApiOkResponse({
     description: 'Get Task Data',
   })
+  @ApiNotFoundResponse({
+    description: 'Target Task Not Found',
+    type: ErrorMessage,
+  })
   @ApiParam({ name: 'id', description: "Target Task's ID" })
   @ApiOperation({
     description:

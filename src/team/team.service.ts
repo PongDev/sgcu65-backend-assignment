@@ -1,6 +1,10 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { Role } from '@prisma/client';
-import { Team, TeamWithUsersEmail } from 'src/dto/team.dto';
+import {
+  Team,
+  TeamWithUsersEmail,
+  TeamWithUsersEmailAndTasks,
+} from 'src/dto/team.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { JWTData } from 'src/types/jwt';
 
@@ -84,7 +88,7 @@ export class TeamService {
   async getTeamByID(
     loginUserJWT: JWTData,
     teamID: number,
-  ): Promise<TeamWithUsersEmail> {
+  ): Promise<TeamWithUsersEmailAndTasks> {
     const loginUser = await this.prismaService.user.findUnique({
       where: { email: loginUserJWT.email },
     });
@@ -109,16 +113,24 @@ export class TeamService {
             userEmail: true,
           },
         },
+        tasks: {
+          select: {
+            taskId: true,
+          },
+        },
       },
     });
     return {
       id: teamData.id,
       name: teamData.name,
       usersEmail: teamData.users.map((e) => e.userEmail),
+      tasksID: teamData.tasks.map((e) => e.taskId),
     };
   }
 
-  async getAllTeam(loginUserJWT: JWTData): Promise<TeamWithUsersEmail[]> {
+  async getAllTeam(
+    loginUserJWT: JWTData,
+  ): Promise<TeamWithUsersEmailAndTasks[]> {
     const loginUser = await this.prismaService.user.findUnique({
       where: { email: loginUserJWT.email },
     });
@@ -132,12 +144,18 @@ export class TeamService {
                 userEmail: true,
               },
             },
+            tasks: {
+              select: {
+                taskId: true,
+              },
+            },
           },
         })
       ).map((e) => ({
         id: e.id,
         name: e.name,
         usersEmail: e.users.map((e) => e.userEmail),
+        tasksID: e.tasks.map((e) => e.taskId),
       }));
     } else {
       return (
@@ -155,12 +173,18 @@ export class TeamService {
                 userEmail: true,
               },
             },
+            tasks: {
+              select: {
+                taskId: true,
+              },
+            },
           },
         })
       ).map((e) => ({
         id: e.id,
         name: e.name,
         usersEmail: e.users.map((e) => e.userEmail),
+        tasksID: e.tasks.map((e) => e.taskId),
       }));
     }
   }

@@ -126,6 +126,8 @@ export class TaskService {
         },
       },
     });
+    if (!taskData)
+      throw new HttpException('Target Task Not Found', HttpStatus.NOT_FOUND);
     return {
       id: taskData.id,
       name: taskData.name,
