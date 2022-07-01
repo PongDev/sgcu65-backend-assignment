@@ -39,38 +39,38 @@ export class TeamService {
 
     if (loginUser.role === Role.ADMIN) {
       try {
-        const { users, ...teamData } = await this.prismaService.team.update({
-          where: {
-            id: teamID,
-          },
-          data: {
-            users: isAdd
-              ? {
-                  connect: usersEmail.map((e) => ({
-                    userEmail_teamId: {
-                      userEmail: e,
-                      teamId: teamID,
-                    },
-                  })),
-                }
-              : {
-                  disconnect: usersEmail.map((e) => ({
-                    userEmail_teamId: {
-                      userEmail: e,
-                      teamId: teamID,
-                    },
-                  })),
+        if (isAdd)
+          await this.prismaService.usersOnTeams.createMany({
+            data: usersEmail.map((e) => ({ teamId: teamID, userEmail: e })),
+            skipDuplicates: true,
+          });
+        else
+          await this.prismaService.usersOnTeams.deleteMany({
+            where: {
+              teamId: teamID,
+              userEmail: {
+                in: usersEmail,
+              },
+            },
+          });
+        const { users, ...teamData } = await this.prismaService.team.findUnique(
+          {
+            where: {
+              id: teamID,
+            },
+            include: {
+              users: {
+                select: {
+                  userEmail: true,
                 },
-          },
-          include: {
-            users: {
-              select: {
-                userEmail: true,
               },
             },
           },
-        });
-        return { usersEmail: users.map((e) => e.userEmail), ...teamData };
+        );
+        return {
+          usersEmail: users.map((e) => e.userEmail),
+          ...teamData,
+        };
       } catch {
         throw new HttpException(
           'Team or Users Not Found',

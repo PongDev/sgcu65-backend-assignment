@@ -48,35 +48,39 @@ export class TaskService {
 
     if (loginUser.role === Role.ADMIN) {
       try {
-        const { teams, ...taskData } = await this.prismaService.task.update({
-          where: { id: targetTask },
-          data: {
-            teams: isAdd
-              ? {
-                  connect: responsibleTeams.map((e) => ({
-                    taskId_teamId: {
-                      taskId: targetTask,
-                      teamId: e,
-                    },
-                  })),
-                }
-              : {
-                  disconnect: responsibleTeams.map((e) => ({
-                    taskId_teamId: {
-                      taskId: targetTask,
-                      teamId: e,
-                    },
-                  })),
+        if (isAdd)
+          await this.prismaService.tasksOnTeams.createMany({
+            data: responsibleTeams.map((e) => ({
+              taskId: targetTask,
+              teamId: e,
+            })),
+            skipDuplicates: true,
+          });
+        else
+          await this.prismaService.tasksOnTeams.deleteMany({
+            where: {
+              taskId: targetTask,
+              Team: {
+                id: {
+                  in: responsibleTeams,
                 },
-          },
-          include: {
-            teams: {
-              select: {
-                teamId: true,
+              },
+            },
+          });
+        const { teams, ...taskData } = await this.prismaService.task.findUnique(
+          {
+            where: {
+              id: targetTask,
+            },
+            include: {
+              teams: {
+                select: {
+                  teamId: true,
+                },
               },
             },
           },
-        });
+        );
         return { responsibleTeamsID: teams.map((e) => e.teamId), ...taskData };
       } catch {
         throw new HttpException(
