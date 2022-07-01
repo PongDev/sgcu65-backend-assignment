@@ -92,10 +92,6 @@ export class UserController {
   }
 
   @Get('search')
-  @ApiBadRequestResponse({
-    description: 'Invalid User Data Parameter',
-    type: ErrorMessage,
-  })
   @ApiOkResponse({
     description: 'Search Users',
   })

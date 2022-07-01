@@ -47,14 +47,14 @@ export class UserService {
     });
 
     if (loginUser.role === Role.ADMIN || loginUser.email === getUserEmail) {
-      try {
-        return await this.prismaService.user.findUnique({
-          where: { email: getUserEmail },
-          select: { email: true, firstname: true, surname: true, role: true },
-        });
-      } catch {
+      const userData = await this.prismaService.user.findUnique({
+        where: { email: getUserEmail },
+        select: { email: true, firstname: true, surname: true, role: true },
+      });
+      if (!userData) {
         throw new HttpException('User Data Not Found', HttpStatus.NOT_FOUND);
       }
+      return userData;
     }
     throw new HttpException('Permission Denied', HttpStatus.UNAUTHORIZED);
   }
@@ -143,11 +143,6 @@ export class UserService {
       if (searchRole === Role.ADMIN) convertSearchRole = Role.ADMIN;
       else if (searchRole === Role.USER) convertSearchRole = Role.USER;
 
-      if (convertSearchRole === null)
-        throw new HttpException(
-          'Invalid User Data Parameter',
-          HttpStatus.BAD_REQUEST,
-        );
       const searchOption = {};
 
       if (searchFirstname)
