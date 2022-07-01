@@ -74,7 +74,7 @@ export class TeamController {
   ): Promise<TeamWithUsersEmail> {
     return await this.teamService.addOrRemoveTeamUsers(
       req.user,
-      params.id,
+      parseInt(params.id),
       payload.usersEmail,
       payload.isAdd,
     );
@@ -93,7 +93,7 @@ export class TeamController {
     @Request() req,
     @Param() params,
   ): Promise<TeamWithUsersEmail> {
-    return await this.teamService.getTeamByID(req.user, params.id);
+    return await this.teamService.getTeamByID(req.user, parseInt(params.id));
   }
 
   @Get()
@@ -121,7 +121,7 @@ export class TeamController {
   async editTeam(@Request() req, @Param() params): Promise<Team> {
     return await this.teamService.editTeam(
       req.user,
-      params.id,
+      parseInt(params.id),
       params.team_name,
     );
   }
@@ -136,6 +136,6 @@ export class TeamController {
   })
   @ApiParam({ name: 'id', description: "Target Team's ID" })
   async deleteTeam(@Request() req, @Param() params): Promise<Team> {
-    return await this.teamService.deleteTeam(req.user, params.id);
+    return await this.teamService.deleteTeam(req.user, parseInt(params.id));
   }
 }

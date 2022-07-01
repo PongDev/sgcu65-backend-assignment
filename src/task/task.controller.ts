@@ -77,7 +77,7 @@ export class TaskController {
   ): Promise<TaskWithTeams> {
     return await this.taskService.addOrRemoveTaskResponsibleTeams(
       req.user,
-      params.id,
+      parseInt(params.id),
       payload.responsibleTeams,
       payload.isAdd,
     );
@@ -93,7 +93,7 @@ export class TaskController {
       'Get Task By ID (Admin always found task if exists, User only found task that they participate)',
   })
   async getTaskByID(@Request() req, @Param() params): Promise<TaskWithTeams> {
-    return await this.taskService.getTaskByID(req.user, params.id);
+    return await this.taskService.getTaskByID(req.user, parseInt(params.id));
   }
 
   @Get()
@@ -122,7 +122,11 @@ export class TaskController {
     @Param() params,
     @Body() updateTask: TaskWithoutID,
   ): Promise<Task> {
-    return await this.taskService.updateTask(req.user, params.id, updateTask);
+    return await this.taskService.updateTask(
+      req.user,
+      parseInt(params.id),
+      updateTask,
+    );
   }
 
   @Delete(':id')
@@ -135,6 +139,6 @@ export class TaskController {
   })
   @ApiParam({ name: 'id', description: "Target Task's ID" })
   async deleteTask(@Request() req, @Param() params): Promise<Task> {
-    return await this.taskService.deleteTask(req.user, params.id);
+    return await this.taskService.deleteTask(req.user, parseInt(params.id));
   }
 }
