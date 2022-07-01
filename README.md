@@ -46,8 +46,8 @@ Pongwiwat Limpasuthum
 
 # โจทย์
 
-[//]: # "- [Minimum Requirement](#คำแนะนำ)"
-[//]: # "- [Optional Requirement](#รายละเอียดของ Feature (Minimum Requirement))"
+[//]: # '- [Minimum Requirement](#คำแนะนำ)'
+[//]: # '- [Optional Requirement](#รายละเอียดของ Feature (Minimum Requirement))'
 
 ## วัตถุประสงค์
 
@@ -187,23 +187,28 @@ Team
 **Project นี้ ถูกสร้างขึ้นโดยใช้ NestJS Framework**
 
 Requirement
+
 - nodejs
 - yarn
+- docker และ docker-compose
 
 วิธีการรัน คือ
 
-1) ```git clone https://github.com/PongDev/sgcu65-backend-assignment.git```
+1. `git clone https://github.com/PongDev/sgcu65-backend-assignment.git` พร้อม cd เข้าไปใน Project
 
-2) สั่ง ```yarn``` เพื่อ install dependencies
+2. สั่ง `yarn` เพื่อ install dependencies
 
-3) copy .env.template แล้วเปลี่ยนชื่อเป็น .env ทำการ config ค่าใน .env ให้ถูกต้อง
+3. copy .env.template แล้วเปลี่ยนชื่อเป็น .env ทำการ config ค่าใน .env ให้ถูกต้อง
 
-4) run database โดยสามารถ run ผ่าน ```docker-compose up```
+4. run database โดยสามารถ run ผ่าน `docker-compose up -d`
 
-5) สั่ง ```yarn database:init``` เพื่อ initialize database
+5. สั่ง `yarn database:init` เพื่อ initialize database (รอให้ docker initialize postgres เสร็จก่อน)
 
-6) สั่ง ```yarn start``` เพื่อ run project ขึ้นมา
+6. สั่ง `yarn start` เพื่อ run project ขึ้นมา
 
-7) Swagger API Document จะอยู่บน Path host:port/api (Default คือ localhost:3000/api)
+7. Swagger API Document จะอยู่บน Path host:port/api (Default คือ http://localhost:3000/api) สำหรับ Database Schema จะอยู่ในไฟล์ [/prisma/schema.prisma](./prisma/schema.prisma)
 
-```# Additional Idea: ใช้ระบบเพิ่ม Role และแต่ละ Role มี Permission กำกับไว้ว่าทำอะไรได้บ้าง เพื่อเพิ่มความยืดหยุ่นของระบบ```
+`# Additional Idea: ใช้ระบบเพิ่ม Role และแต่ละ Role มี Permission กำกับไว้ว่าทำอะไรได้บ้าง เพื่อเพิ่มความยืดหยุ่นของระบบ`
+`# Additional Idea: Status ของตัว Task สามารถทำเป็น Table อีกอันนึงได้ เพื่อให้สามารถเพิ่ม Task Status ได้อย่างยืดหยุ่น`
+
+By Pongwiwat Limpasuthum
