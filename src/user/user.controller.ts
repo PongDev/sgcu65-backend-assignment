@@ -88,7 +88,8 @@ export class UserController {
     description: 'Delete User by Admin',
   })
   async deleteUser(@Request() req, @Param() params): Promise<void> {
-    return await this.userService.deleteUser(req.user, params.email);
+    await this.userService.deleteUser(req.user, params.email);
+    return;
   }
 
   @Get('search')

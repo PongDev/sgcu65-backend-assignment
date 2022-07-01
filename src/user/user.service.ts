@@ -47,14 +47,14 @@ export class UserService {
     });
 
     if (loginUser.role === Role.ADMIN || loginUser.email === getUserEmail) {
-      const userData = await this.prismaService.user.findUnique({
-        where: { email: getUserEmail },
-        select: { email: true, firstname: true, surname: true, role: true },
-      });
-      if (!userData) {
+      try {
+        return await this.prismaService.user.findUnique({
+          where: { email: getUserEmail },
+          select: { email: true, firstname: true, surname: true, role: true },
+        });
+      } catch {
         throw new HttpException('User Data Not Found', HttpStatus.NOT_FOUND);
       }
-      return userData;
     }
     throw new HttpException('Permission Denied', HttpStatus.UNAUTHORIZED);
   }
@@ -75,15 +75,15 @@ export class UserService {
         );
       }
       const { email, ...UpdatePath } = updateUserData;
-      const userData = await this.prismaService.user.update({
-        where: { email },
-        data: UpdatePath,
-        select: { email: true, firstname: true, surname: true, role: true },
-      });
-      if (!userData) {
+      try {
+        return await this.prismaService.user.update({
+          where: { email },
+          data: UpdatePath,
+          select: { email: true, firstname: true, surname: true, role: true },
+        });
+      } catch {
         throw new HttpException('User Data Not Found', HttpStatus.NOT_FOUND);
       }
-      return userData;
     } else if (
       loginUser.email === updateUserData.email &&
       updateUserData.password
@@ -92,17 +92,17 @@ export class UserService {
         updateUserData.password,
         this.configService.get<number>('bcrypt.cost'),
       );
-      const userData = await this.prismaService.user.update({
-        where: { email: updateUserData.email },
-        data: {
-          password: updateUserData.password,
-        },
-        select: { email: true, firstname: true, surname: true, role: true },
-      });
-      if (!userData) {
+      try {
+        return await this.prismaService.user.update({
+          where: { email: updateUserData.email },
+          data: {
+            password: updateUserData.password,
+          },
+          select: { email: true, firstname: true, surname: true, role: true },
+        });
+      } catch {
         throw new HttpException('User Data Not Found', HttpStatus.NOT_FOUND);
       }
-      return userData;
     }
     throw new HttpException('Permission Denied', HttpStatus.UNAUTHORIZED);
   }
@@ -116,13 +116,14 @@ export class UserService {
     });
 
     if (loginUser.role === Role.ADMIN) {
-      const userData = this.prismaService.user.delete({
-        where: { email: deleteUserEmail },
-      });
-      if (!userData) {
+      try {
+        await this.prismaService.user.delete({
+          where: { email: deleteUserEmail },
+        });
+        return;
+      } catch {
         throw new HttpException('User Data Not Found', HttpStatus.NOT_FOUND);
       }
-      return;
     }
     throw new HttpException('Permission Denied', HttpStatus.UNAUTHORIZED);
   }
