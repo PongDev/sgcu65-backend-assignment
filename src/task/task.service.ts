@@ -1,6 +1,7 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { Role, Task } from '@prisma/client';
-import { TaskWithoutID, TaskWithTeam } from 'src/dto/task.dto';
+import e from 'express';
+import { TaskWithoutID, TaskWithTeams } from 'src/dto/task.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { JWTData } from 'src/types/jwt';
 
@@ -40,14 +41,14 @@ export class TaskService {
     targetTask: number,
     responsibleTeams: number[],
     isAdd: boolean,
-  ): Promise<void> {
+  ): Promise<TaskWithTeams> {
     const loginUser = await this.prismaService.user.findUnique({
       where: { email: loginUserJWT.email },
     });
 
     if (loginUser.role === Role.ADMIN) {
       try {
-        await this.prismaService.task.update({
+        const { teams, ...taskData } = await this.prismaService.task.update({
           where: { id: targetTask },
           data: {
             teams: isAdd
@@ -68,7 +69,15 @@ export class TaskService {
                   })),
                 },
           },
+          include: {
+            teams: {
+              select: {
+                teamId: true,
+              },
+            },
+          },
         });
+        return { responsibleTeamsID: teams.map((e) => e.teamId), ...taskData };
       } catch {
         throw new HttpException(
           'Task or Teams Not Found',
@@ -82,7 +91,7 @@ export class TaskService {
   async getTaskByID(
     loginUserJWT: JWTData,
     taskID: number,
-  ): Promise<TaskWithTeam> {
+  ): Promise<TaskWithTeams> {
     const loginUser = await this.prismaService.user.findUnique({
       where: { email: loginUserJWT.email },
     });
@@ -122,7 +131,7 @@ export class TaskService {
     };
   }
 
-  async getAllTask(loginUserJWT: JWTData): Promise<TaskWithTeam[]> {
+  async getAllTask(loginUserJWT: JWTData): Promise<TaskWithTeams[]> {
     const loginUser = await this.prismaService.user.findUnique({
       where: { email: loginUserJWT.email },
     });

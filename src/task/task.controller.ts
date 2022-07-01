@@ -26,7 +26,7 @@ import {
   AddOrRemoveTaskResponsibleTeams,
   Task,
   TaskWithoutID,
-  TaskWithTeam,
+  TaskWithTeams,
 } from 'src/dto/task.dto';
 import { TaskService } from './task.service';
 
@@ -74,7 +74,7 @@ export class TaskController {
     @Request() req,
     @Param() params,
     @Body() payload: AddOrRemoveTaskResponsibleTeams,
-  ): Promise<void> {
+  ): Promise<TaskWithTeams> {
     return await this.taskService.addOrRemoveTaskResponsibleTeams(
       req.user,
       params.id,
@@ -92,7 +92,7 @@ export class TaskController {
     description:
       'Get Task By ID (Admin always found task if exists, User only found task that they participate)',
   })
-  async getTaskByID(@Request() req, @Param() params): Promise<TaskWithTeam> {
+  async getTaskByID(@Request() req, @Param() params): Promise<TaskWithTeams> {
     return await this.taskService.getTaskByID(req.user, params.id);
   }
 

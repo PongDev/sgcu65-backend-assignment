@@ -25,7 +25,7 @@ export class Task {
   deadline: Date;
 }
 
-export class TaskWithTeam {
+export class TaskWithTeams {
   @ApiProperty({ example: 1 })
   id: number;
 
@@ -48,7 +48,7 @@ export class AddOrRemoveTaskResponsibleTeams {
 
   @ApiProperty({
     example: true,
-    description: 'If true will add team to task else remove from task',
+    description: 'If true will add teams to task else remove from task',
   })
   isAdd: boolean;
 }
